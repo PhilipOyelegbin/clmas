@@ -1,0 +1,5 @@
+/infra/id_rsa
+/infra/id_rsa.pub
+/infra/.terraform/
+/infra/terraform.tfstate.backup
+/infra/.terraform.lock.hcl
