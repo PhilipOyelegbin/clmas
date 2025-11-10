@@ -232,7 +232,6 @@ ssh -i ../infra/id_rsa ubuntu@13.40.69.226 "sudo apt install stress -y && stress
 
 https://github.com/user-attachments/assets/60c1e174-c908-4e7f-9a5d-0b8c10418f95
 
-
 ---
 
 ## 🧠 Troubleshooting
