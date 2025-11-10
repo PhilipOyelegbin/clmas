@@ -148,6 +148,8 @@ cd infra
 ./index.sh apply           # Create the infrastructure
 ```
 
+![Infra output](./assets/infra.png)
+
 3. **Configure the Servers**
 
 - Update the respective server IP for each functions in [index file](./config/index.sh).
@@ -167,6 +169,10 @@ cd config
      Default credentials → `admin / admin`
    - **Prometheus:** [http://localhost:9090](http://localhost:9090)
    - **Alertmanager:** [http://localhost:9093](http://localhost:9093)
+
+   ![Prometheus](./assets/prometheus.png)
+   ![Alert rule](./assets/alertrule.png)
+   ![Alert manager](./assets/alertmanager.png)
 
 5. **Create Vituals**
 
@@ -191,6 +197,10 @@ Dashboards included:
 
 Grafana dashboards can be imported manually or auto-provisioned via JSON files.
 
+![Dash list](./assets/dashlist.png)
+![DB dash](./assets/db-dash.png)
+![Server dash](./assets/server-dash.png)
+
 ---
 
 ## 🚨 Alerting
@@ -201,6 +211,8 @@ Test your alert by running the command below to stress your app server.
 ssh -i ../infra/id_rsa ubuntu@13.40.69.226 "sudo apt install stress -y && stress --cpu 2"
 ```
 
+![Alert fired](./assets/alertfired.png)
+
 ---
 
 ## 🔒 Security Recommendation
@@ -209,6 +221,9 @@ ssh -i ../infra/id_rsa ubuntu@13.40.69.226 "sudo apt install stress -y && stress
 - **Firewall Rules:** Restrict Prometheus access to trusted IPs only.
 - **Secrets Management:** Use `.env` files or Vault for credentials.
 - **HTTPS** recommended for Grafana and Prometheus endpoints.
+
+**🚀 Live Demo:**
+![demo](./assets/demo.mp4)
 
 ---
 
