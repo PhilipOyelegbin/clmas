@@ -2,6 +2,12 @@
 
 A production-grade **monitoring and alerting system** built using **Prometheus** and **Grafana** to provide real-time visibility into the health, performance, and availability of **web servers** and **database servers**.
 
+![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazon-aws&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-7B42BC?logo=terraform&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?logo=grafana&logoColor=white)
+![Deployment Status](https://img.shields.io/badge/Deployment-Success-brightgreen)
+
 ---
 
 ## 📘 Table of Contents
