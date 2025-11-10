@@ -1,0 +1,27 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "slack"
+
+receivers:
+  - name: "slack"
+    slack_configs:
+      - send_resolved: true
+        channel: "#alerts"
+        api_url: "<SLACK_WEBHOOK_URL>"
+        title: "{{ .CommonLabels.alertname }} - {{ .CommonLabels.severity | toUpper }}"
+        text: |
+          *Alert:* {{ .CommonLabels.alertname }}
+          *Severity:* {{ .CommonLabels.severity }}
+          *Instance:* {{ .CommonLabels.instance }}
+          *Description:* {{ .CommonAnnotations.description }}
+      - send_resolved: false
+        channel: "#alerts"
+        api_url: "<SLACK_WEBHOOK_URL>"
+        title: "{{ .CommonLabels.alertname }} - {{ .CommonLabels.severity | toUpper }}"
+        text: |
+          *Alert:* {{ .CommonLabels.alertname }}
+          *Severity:* {{ .CommonLabels.severity }}
+          *Instance:* {{ .CommonLabels.instance }}
+          *Description:* {{ .CommonAnnotations.description }}

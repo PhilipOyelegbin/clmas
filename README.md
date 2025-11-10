@@ -12,17 +12,17 @@ A production-grade **monitoring and alerting system** built using **Prometheus**
 
 ## 📘 Table of Contents
 
-1. [Overview](#overview)
-2. [Architecture](#architecture)
-3. [Features](#features)
-4. [Tech Stack](#tech-stack)
-5. [Project Structure](#project-structure)
-6. [Setup and Installation](#setup-and-installation)
-7. [Dashboards](#dashboards)
-8. [Alerting](#alerting)
-9. [Security Recommendation](#security)
-10. [Troubleshooting](#troubleshooting)
-11. [Future Enhancements](#future-enhancements)
+1. [Overview](#-overview)
+2. [Architecture](#-architecture)
+3. [Features](#-features)
+4. [Tech Stack](#-tech-stack)
+5. [Project Structure](#-project-structure)
+6. [Setup and Installation](#-setup-and-installation)
+7. [Dashboards](#-dashboards)
+8. [Alerting](#-alerting)
+9. [Security Recommendation](#-security)
+10. [Troubleshooting](#-troubleshooting)
+11. [Future Enhancements](#-future-enhancements)
 
 ---
 
@@ -112,7 +112,7 @@ The goal is to:
 
 ```
 clmas/
-├── config/
+├── configs/
 │   ├── alert_rules.yml         # Custom alerting rules
 │   ├── alertmanager.yml        # Alert routing configuration
 │   ├── app.sh                  # App server exporter config file
@@ -132,7 +132,7 @@ clmas/
 
 ### 🧾 Prerequisites
 
-- Terraoform infrastructure provision
+- Terraform infrastructure provision
 - Access to the target app and database servers
 - Network connectivity between Prometheus and monitored nodes
 
@@ -150,7 +150,7 @@ cd clmas
 ```bash
 cd infra
 ./index.sh init            # Initialize terraform
-./index.sh validate        # Validate terraoform script
+./index.sh validate        # Validate terraform script
 ./index.sh apply           # Create the infrastructure
 ```
 
@@ -158,9 +158,9 @@ cd infra
 
 3. **Configure the Servers**
 
-- Update the respective server IP for each functions in [index file](./config/index.sh).
-- Update the scrape targets server IP in [prometheus file](config/prometheus.yml):
-- Update the slack api url in [alertmanager file](config/alertmanager.yml):
+- Update the respective server IP for each functions in [index file](./configs/index.sh).
+- Update the scrape targets server IP in [prometheus file](configs/prometheus.yml):
+- Update the slack api url in [alertmanager file](configs/alertmanager.yml):
 
 ```bash
 cd config
@@ -171,10 +171,10 @@ cd config
 
 4. **Access Dashboards**
 
-   - **Grafana:** [http://localhost:3000](http://localhost:3000)
+   - **Grafana:** [http://<MONITORING_SERVER_IP>:3000](http://<MONITORING_SERVER_IP>:3000)
      Default credentials → `admin / admin`
-   - **Prometheus:** [http://localhost:9090](http://localhost:9090)
-   - **Alertmanager:** [http://localhost:9093](http://localhost:9093)
+   - **Prometheus:** [http://<MONITORING_SERVER_IP>:9090](http://<MONITORING_SERVER_IP>:9090)
+   - **Alertmanager:** [http://<MONITORING_SERVER_IP>:9093](http://<MONITORING_SERVER_IP>:9093)
 
    ![Prometheus](./assets/prometheus.png)
    ![Alert rule](./assets/alertrule.png)
@@ -214,7 +214,7 @@ Grafana dashboards can be imported manually or auto-provisioned via JSON files.
 Test your alert by running the command below to stress your app server.
 
 ```bash
-ssh -i ../infra/id_rsa ubuntu@13.40.69.226 "sudo apt install stress -y && stress --cpu 2"
+ssh -i ../infra/id_rsa ubuntu@<APP_SERVER_IP> "sudo apt install stress -y && stress --cpu 2"
 ```
 
 ![Alert fired](./assets/alertfired.png)
