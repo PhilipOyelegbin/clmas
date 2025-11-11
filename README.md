@@ -158,15 +158,13 @@ cd infra
 
 3. **Configure the Servers**
 
-- Update the respective server IP for each functions in [index file](./configs/index.sh).
+- Update the respective server IP in [index file](./configs/index.sh) defined variables.
 - Update the scrape targets server IP in [prometheus file](configs/prometheus.yml):
 - Update the slack api url in [alertmanager file](configs/alertmanager.yml):
 
 ```bash
 cd config
-./index.sh app            # Configure app server exporter
-./index.sh database       # Configure database server exporter
-./index.sh monitor        # Configure monitor server exporter
+./index.sh            # Configure all servers
 ```
 
 4. **Access Dashboards**

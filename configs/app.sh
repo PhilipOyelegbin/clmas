@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 set -e
 
-echo "---------------------------- Updating and installing dependencies -------------------------------"
+echo "========================= ⚙️ Updating and installing dependencies ========================="
 sudo apt update -y
-sudo apt install -y wget curl tar mysql-server
+sudo apt install -y wget curl tar
 
 # ========================= NODE EXPORTER =========================
-echo "---------------------------- Installing Node Exporter -------------------------------"
+echo "========================= ⚙️ Installing Node Exporter ========================="
 cd /tmp
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
 tar xvf node_exporter-1.9.1.linux-amd64.tar.gz
@@ -34,8 +34,8 @@ sudo systemctl start node_exporter
 echo "✅ Node Exporter running on port 9100"
 
 # ========================= VERIFICATION =========================
-echo "------------------------------ Verifying Exporters ----------------------------------"
+echo "========================= 🚀 Verifying Exporters ========================="
 echo "Node Exporter metrics (port 9100):"
 curl -s http://localhost:9100/metrics | head -n 5 || echo "Node Exporter not responding."
 
-echo "✅ Setup complete.
+echo "🎉 App server setup completed 🎉."
