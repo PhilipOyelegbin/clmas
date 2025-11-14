@@ -4,9 +4,9 @@ set -e
 
 # Define variables
 SSH_KEY="../infra/id_rsa"
-MONITORING_SERVER_IP=18.133.157.101
-APP_SERVER_IP=18.170.78.162
-DATABASE_SERVER_IP=172.20.10.39
+MONITORING_SERVER_IP=13.40.28.32
+APP_SERVER_IP=13.40.25.142
+DATABASE_SERVER_IP=172.20.10.118
 
 # Colors for output
 RED='\033[0;31m'
@@ -38,7 +38,7 @@ fi
 # Configure monitoring server
 log_info "Configuring monitoring server..."
 chmod 740 monitor.sh
-scp -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_KEY monitor.sh prometheus.yml alert_rule.yml alertmanager.yml ubuntu@"$MONITORING_SERVER_IP":/tmp
+scp -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_KEY monitor.sh prometheus.yml alert.rules.yml alertmanager.yml ubuntu@"$MONITORING_SERVER_IP":/tmp
 ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@"$MONITORING_SERVER_IP" "bash /tmp/monitor.sh"
 log_success "Monitoring server configured successfully"
 

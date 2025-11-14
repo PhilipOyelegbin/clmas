@@ -1,6 +1,10 @@
 #!/usr/bin/bash
 set -e
 
+# Define variables
+NODE_EXPORTER_VERSION=1.10.2
+MYSQLD_EXPORTER_VERSION=0.18.0
+
 echo "========================= ⚙️ Updating and installing dependencies ========================="
 sudo apt update -y
 sudo apt install -y wget curl tar mysql-server
@@ -8,9 +12,9 @@ sudo apt install -y wget curl tar mysql-server
 # ========================= NODE EXPORTER =========================
 echo "========================= ⚙️ Installing Node Exporter ========================="
 cd /tmp
-wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
-tar xvf node_exporter-1.9.1.linux-amd64.tar.gz
-sudo mv node_exporter-1.9.1.linux-amd64/node_exporter /usr/local/bin/
+wget https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
+tar xvf node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
+sudo mv node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter /usr/local/bin/
 
 # Create systemd service
 sudo tee /etc/systemd/system/node_exporter.service > /dev/null <<EOF
@@ -33,12 +37,12 @@ sudo systemctl start node_exporter
 
 echo "✅ Node Exporter running on port 9100"
 
-# ========================= MYSQL EXPORTER =========================
-echo "========================= ⚙️ Installing MySQL Exporter ========================="
+# ========================= MYSQLD EXPORTER =========================
+echo "========================= ⚙️ Installing MySQLD Exporter ========================="
 cd /tmp
-wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.15.1/mysqld_exporter-0.15.1.linux-amd64.tar.gz
-tar xvf mysqld_exporter-0.15.1.linux-amd64.tar.gz
-sudo mv mysqld_exporter-0.15.1.linux-amd64/mysqld_exporter /usr/local/bin/
+wget https://github.com/prometheus/mysqld_exporter/releases/download/v${MYSQLD_EXPORTER_VERSION}/mysqld_exporter-${MYSQLD_EXPORTER_VERSION}.linux-amd64.tar.gz
+tar xvf mysqld_exporter-${MYSQLD_EXPORTER_VERSION}.linux-amd64.tar.gz
+sudo mv mysqld_exporter-${MYSQLD_EXPORTER_VERSION}.linux-amd64/mysqld_exporter /usr/local/bin/
 
 # Create MySQL exporter user
 echo "========================= ⚙️ Configuring MySQL user ========================="

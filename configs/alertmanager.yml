@@ -2,26 +2,29 @@ global:
   resolve_timeout: 5m
 
 route:
+  group_by: ["alertname", "instance"]
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 1h
   receiver: "slack"
+  routes:
+    - match:
+        severity: critical
+      receiver: "slack"
+    - match_re:
+        severity: warning|info
+      receiver: "slack"
 
 receivers:
   - name: "slack"
     slack_configs:
       - send_resolved: true
         channel: "#alerts"
-        api_url: "<SLACK_WEBHOOK_URL>"
+        api_url: "<SLACK_WEBHOOK_URL>" # Update SLACK_WEBHOOK_URL
         title: "{{ .CommonLabels.alertname }} - {{ .CommonLabels.severity | toUpper }}"
         text: |
           *Alert:* {{ .CommonLabels.alertname }}
           *Severity:* {{ .CommonLabels.severity }}
           *Instance:* {{ .CommonLabels.instance }}
           *Description:* {{ .CommonAnnotations.description }}
-      - send_resolved: false
-        channel: "#alerts"
-        api_url: "<SLACK_WEBHOOK_URL>"
-        title: "{{ .CommonLabels.alertname }} - {{ .CommonLabels.severity | toUpper }}"
-        text: |
-          *Alert:* {{ .CommonLabels.alertname }}
-          *Severity:* {{ .CommonLabels.severity }}
-          *Instance:* {{ .CommonLabels.instance }}
-          *Description:* {{ .CommonAnnotations.description }}
+          *Summary:* {{ .CommonAnnotations.summary }}

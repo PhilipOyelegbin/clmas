@@ -7,7 +7,7 @@ rule_files:
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ["18.133.157.101:9093"] # Monitoring server IP
+        - targets: ["13.40.28.32:9093"] # Monitoring server IP
 
 scrape_configs:
   - job_name: "prometheus"
@@ -16,11 +16,11 @@ scrape_configs:
 
   - job_name: "server"
     static_configs:
-      - targets: ["18.170.28.172:9100", "172.20.10.39:9100"]
+      - targets: ["13.40.25.142:9100", "172.20.10.118:9100"]
 
   - job_name: "database"
     static_configs:
-      - targets: ["172.20.10.39:9104"]
+      - targets: ["172.20.10.118:9104"]
 
   - job_name: "blackbox"
     metrics_path: /probe
@@ -28,7 +28,7 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-          - "http://18.170.78.162" # Application server URL to be monitored
+          - "http://13.40.25.142" # Application server URL to be monitored
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

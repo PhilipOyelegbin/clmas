@@ -1,5 +1,11 @@
-#!/usr/bin/bash
+#!/bin/bash
+
 set -e
+
+# Setup variables
+PROMETHEUS_VERSION=3.7.3
+ALERTMANAGER_VERSION=0.29.0
+BLACKBOX_EXPORTER_VERSION=0.27.0
 
 # ========================= PROMETHEUS SETUP =========================
 echo "============================= ⚙️ Updating and installing dependencies =================================="
@@ -7,7 +13,7 @@ sudo apt update -y
 sudo apt install -y wget curl tar
 
 echo "============================= ⚙️ Downloading Prometheus =================================="
-wget https://github.com/prometheus/prometheus/releases/download/v3.7.1/prometheus-3.7.1.linux-amd64.tar.gz
+wget https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz
 
 echo "============================= ⚙️ Extracting prometheus and move binaries =================================="
 tar xvf prometheus-*.tar.gz
@@ -15,11 +21,12 @@ sudo mv prometheus-*/prometheus /usr/local/bin/
 sudo mv prometheus-*/promtool /usr/local/bin/
 
 echo "============================= ⚙️ Creating directories =================================="
-sudo mkdir /etc/prometheus /var/lib/prometheus
+sudo mkdir -p /etc/prometheus /var/lib/prometheus
 sudo chown -R nobody:nogroup /etc/prometheus /var/lib/prometheus
 
 echo "============================= ⚙️ Moving the default configuration file =================================="
-sudo mv prometheus.yml /etc/prometheus/
+sudo mv /tmp/prometheus.yml /etc/prometheus/
+sudo mv /tmp/alert.rules.yml /etc/prometheus/
 
 echo "============================= ⚙️ Creating Prometheus Service =================================="
 sudo tee /etc/systemd/system/prometheus.service > /dev/null <<EOF
@@ -39,9 +46,64 @@ EOF
 
 sudo systemctl daemon-reload
 sudo systemctl enable prometheus
-sudo systemctl start prometheus
+sudo systemctl restart prometheus
 
-echo "✅ Prometheus running on ${curl ifconfig.me}:9090"
+echo "✅ Prometheus running on $(curl -s ifconfig.me):9090"
+
+# ========================= ALERTMANAGER SETUP =========================
+echo "============================= ⚙️ Download Alertmanager =================================="
+wget https://github.com/prometheus/alertmanager/releases/download/v${ALERTMANAGER_VERSION}/alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
+
+echo "============================= ⚙️ Extract the tarball =================================="
+tar -xvf alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
+sudo mv alertmanager-${ALERTMANAGER_VERSION}.linux-amd64/alertmanager /usr/local/bin/
+sudo mv alertmanager-${ALERTMANAGER_VERSION}.linux-amd64/amtool /usr/local/bin/
+
+echo "============================= ⚙️ Create Alertmanager Config File =================================="
+if [ ! -d "/etc/alertmanager" ]; then
+  sudo mkdir -p /etc/alertmanager
+else
+  echo "Directory /etc/alertmanager already exists."
+fi
+
+if [ ! -d "/var/lib/alertmanager" ]; then
+  sudo mkdir -p /var/lib/alertmanager
+else
+  echo "Directory /var/lib/alertmanager already exists."
+fi
+
+if id "alertmanager" &>/dev/null; then
+  echo "User 'alertmanager' already exists."
+else
+  echo "Creating user 'alertmanager'..."
+  sudo useradd --no-create-home --shell /bin/false alertmanager
+  echo "User 'alertmanager' created successfully."
+fi
+
+sudo mv /tmp/alertmanager.yml /etc/alertmanager/
+sudo chown -R alertmanager:alertmanager /etc/alertmanager/ /var/lib/alertmanager
+sudo chmod -R 755 /etc/alertmanager /var/lib/alertmanager
+
+echo "============================= ⚙️ Create Alertmanager Service =================================="
+sudo tee /etc/systemd/system/alertmanager.service > /dev/null <<EOF
+[Unit]
+Description=Prometheus Alertmanager
+After=network.target
+
+[Service]
+User=alertmanager
+ExecStart=/usr/local/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/var/lib/alertmanager/data
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable alertmanager
+sudo systemctl restart alertmanager
+sudo systemctl status alertmanager
+
+echo "✅ Alertmanager running on $(curl -s ifconfig.me):9093"
 
 # ========================= BLACKBOX EXPORTER SETUP =========================
 echo "============================= ⚙️ Download and extract blackbox exporter =================================="
@@ -79,7 +141,7 @@ EOF
 
 sudo systemctl daemon-reload
 sudo systemctl enable blackbox_exporter
-sudo systemctl start blackbox_exporter
+sudo systemctl restart blackbox_exporter
 sudo systemctl status blackbox_exporter
 
 echo "✅ Blackbox enabled"
@@ -95,9 +157,9 @@ echo "============================= ⚙️ Update the package list and install G
 sudo apt update
 sudo apt install grafana -y
 sudo systemctl enable grafana-server
-sudo systemctl start grafana-server
+sudo systemctl restart grafana-server
 
-echo "✅ Grafana running on ${curl ifconfig.me}:3000"
+echo "✅ Grafana running on $(curl -s ifconfig.me):3000"
 
 # ========================= VERIFICATION =========================
 echo "============================= 🚀 Verifying =================================="
