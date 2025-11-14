@@ -237,7 +237,7 @@ ssh -i ../infra/id_rsa ubuntu@<APP_SERVER_IP> "sudo apt install stress -y && str
 - **HTTPS:** Recommended for Grafana and Prometheus endpoints.
 
 **🚀 Live Demo:**
-[GitHub Demo Video](https://github.com/user-attachments/assets/60c1e174-c908-4e7f-9a5d-0b8c10418f95)
+https://github.com/user-attachments/assets/85968545-1086-495e-bad3-bfd3b2e97bf1
 
 ---
 
